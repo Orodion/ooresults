@@ -46,8 +46,13 @@ The entries mean:
    .ooresults/cert of the user's home directory are used;
    if they do not exist, self-signed files are created.
 
+   If the entries are given but the files do not exist, the ooresults-server does not start
+   and reports an error.
+
 
 [Server]demo_reader
+
+   The values on, off, true, false, yes and no are allowed for demo_reader and import_stream.
 
    If the entry demo_reader is on, a page can be opened at the address https://localhost:8080/demo
    with which the reading of an SI card can be simulated,
@@ -108,6 +113,35 @@ The entries mean:
 
       The key also serves as proof of authorization. Anyone who knows the key can store data
       in the assigned event on the ooresults-server.
+
+
+.. _command_line_options:
+
+Command line options
+--------------------
+
+ooresults-server
+
+   -p <directory>, --path <directory>
+      Directory in which config.ini, users.json, rental_cards.txt and the database ooresults.sqlite
+      are searched for. If omitted, the subdirectory .ooresults of the user's home directory is used.
+      The directory must exist.
+
+   -d <file>, --database <file>
+      SQLite database file that is used instead of ooresults.sqlite. The file must exist.
+
+ooresults-reader
+
+   -c <file>, --config <file>
+      Configuration file that is used instead of .ooresults/config.ini in the home directory.
+
+   -f <file>, --file <file>
+      Instead of reading from a readout station, the SI card data is sent from a
+      log file cardreader-<date>.log.
+
+Both programs write log files to the current directory: the ooresults-server the file
+ooresults_server.log, the ooresults-reader one file cardreader-<date>.log per day
+with the SI card data that has been read.
 
 
 .. _user_management:

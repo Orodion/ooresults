@@ -16,7 +16,7 @@ Einloggen
    auf dem der ooresults-server läuft (zum Starten des ooresults-servers siehe Kapitel :ref:`start_server`.
    
    Ist dies nicht der Fall (läuft der ooresults-server auf einem anderen Rechner),
-   ist anstelle von https://localhost:8080 eine andere Adresse und gegebenfalls
+   ist anstelle von https://localhost:8080 eine andere Adresse und gegebenenfalls
    auch ein anderer Benutzername und ein anderes Passwort zu verwenden. 
 
 1. Starten des ooresults-server

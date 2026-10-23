@@ -57,7 +57,7 @@ Es werden alle gelesenen SI-Cards zum selektierten Wettkampf seit Serverstart an
 
    Das Registerblatt "SI Reader" kann nur geöffnet werden, wenn ein Wettkampf mit einem Key selektiert ist.
 
-Wird eine SI-Card gelesen, wird automatisch geprüft, ob die gelesene SI-Card Nummer eindeutig einem beim betreffenen Wettkampf
+Wird eine SI-Card gelesen, wird automatisch geprüft, ob die gelesene SI-Card Nummer eindeutig einem beim betreffenden Wettkampf
 registriertem Läufer zugeordnet werden kann.
 
 Ist dies der Fall, wird das Ergebnis beim Läufer gespeichert und
@@ -109,7 +109,7 @@ Dabei bedeuten:
 
 .. note::
 
-   Nach einem Neustart des Servers ist die Tabelle des "SI CardReader" Fenster leer.
+   Nach einem Neustart des Servers ist die Tabelle des Registerblatts "SI Reader" leer.
 
 Kann die gelesene SI-Card keinem Läufer zugeordnet werden, wird das Ergebnis als neuer Eintrag (ohne Läufernamen)
 auf der Seite "Entries" angezeigt:
@@ -118,7 +118,7 @@ auf der Seite "Entries" angezeigt:
 
 .. note::
 
-   Im Gegensatz zur "SI CardReader" Liste wird die "Entries" Liste nicht automatisch beim Einlesen einer SI-Card,
+   Im Gegensatz zur "SI Reader" Liste wird die "Entries" Liste nicht automatisch beim Einlesen einer SI-Card,
    sondern erst nach Aufruf der "Reload" Funktion (oder beim Wechsel von einem anderen Registerblatt) aktualisiert.
 
 

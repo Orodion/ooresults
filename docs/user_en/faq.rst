@@ -9,13 +9,15 @@ Frequently asked questions
    as Anna-Lena Baerbock, these are two different competitors for ooresults,
    and two competitors are listed in the overall result.
 
-   If Annalena Baerbock is the correct
-   name of the competitor, she has to be added in event B as Annalena Baerbock. Then,
-   in event B the result has to be removed from the competitor Anna-Lena Baerbock and added to the
-   competitor Annalena Baerbock.
-
-   After that the competitor Anna-Lena Baerbock can be deleted in event B (and in the Competitors list).
+   If Annalena Baerbock is the correct name of the competitor, the two competitors can be merged
+   in the "Competitors" tab with "Merge competitors ...", see :ref:`merge_competitors`.
+   Anna-Lena Baerbock is then deleted and replaced by Annalena Baerbock in all events.
    The overall result now contains only the competitor Annalena Baerbock.
+
+   Alternatively, the competitor Annalena Baerbock can be added in event B. Then,
+   in event B the result has to be removed from the competitor Anna-Lena Baerbock and added to the
+   competitor Annalena Baerbock. After that the competitor Anna-Lena Baerbock can be deleted
+   in event B (and in the Competitors list).
 
 |
 

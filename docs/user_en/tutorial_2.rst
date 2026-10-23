@@ -109,7 +109,7 @@ The meanings are:
 
 .. note::
 
-   After a restart of the server the table of the "SI CardReader" window is empty.
+   After a restart of the server the table of the "SI Reader" tab is empty.
 
 If the SI card that has been read cannot be assigned to a competitor, the result is displayed as a new entry (without a competitor name)
 on the page "Entries":
@@ -118,7 +118,7 @@ on the page "Entries":
 
 .. note::
 
-   In contrast to the "SI CardReader" list, the "Entries" list is not updated automatically when an SI card is read,
+   In contrast to the "SI Reader" list, the "Entries" list is not updated automatically when an SI card is read,
    but only after the "Reload" function is called (or when switching from another tab).
 
 

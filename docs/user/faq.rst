@@ -9,14 +9,15 @@ Häufige Fragen
    als Anna-Lena Baerbock eingetragen, so sind dies für ooresults zwei verschiedene Läuferinnen,
    und es werden im Gesamtergebnis zwei Läuferinnen gelistet.
    
-   Ist Annalena Baerbock der korrekte
-   Name der Läuferin, so ist sie im Wettkampf B als Annalena Baerbock hinzuzufügen. Anschliessend
-   ist im Wettkampf B das Ergebnis von der Läuferin Anna-Lena Baerbock zu entfernen und zur
-   Läuferin Annalena Baerbock hinzuzufügen.
-   
-   Danach kann im Wettkampf B (und in der Competitors-Liste)
-   die Läuferin Anna-Lena Baerbock gelöscht werden.
+   Ist Annalena Baerbock der korrekte Name der Läuferin, können die beiden Läuferinnen im Registerblatt
+   "Competitors" mit "Merge competitors ..." zusammengeführt werden, siehe :ref:`merge_competitors`.
+   Dabei wird Anna-Lena Baerbock gelöscht und bei allen Wettkämpfen durch Annalena Baerbock ersetzt.
    Im Gesamtergebnis gibt es jetzt nur noch die Läuferin Annalena Baerbock.
+
+   Alternativ kann die Läuferin Annalena Baerbock im Wettkampf B hinzugefügt werden. Anschliessend
+   ist im Wettkampf B das Ergebnis von der Läuferin Anna-Lena Baerbock zu entfernen und zur
+   Läuferin Annalena Baerbock hinzuzufügen. Danach kann im Wettkampf B (und in der Competitors-Liste)
+   die Läuferin Anna-Lena Baerbock gelöscht werden.
 
 |
 
