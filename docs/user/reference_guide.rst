@@ -377,6 +377,58 @@ Controls
    Gültige Eingaben sind z.B. "121-141-122-124" oder "121 - 141 - 122 - 124".
 
 
+.. _results:
+
+Results
+-------
+
+Das Registerblatt "Results" zeigt die Ergebnisse des selektierten Wettkampfes, sortiert nach Kategorien.
+Eine Beschreibung finden Sie im Abschnitt "Anzeige der Ergebnisse" im Tutorial.
+
+Reload
+
+   Lädt die Ergebnisse neu.
+
+
+Print results ...
+
+   Erstellt die Ergebnisliste als PDF-Datei. Mit der Option "Include not started competitors" werden
+   auch Teilnehmer aufgeführt, die nicht gestartet sind.
+
+
+Print split times ...
+
+   Erstellt die Zwischenzeiten als PDF-Datei. Mit der Option "Landscape" wird die Seite im Querformat ausgegeben.
+
+
+.. _series:
+
+Series
+------
+
+Das Registerblatt "Series" zeigt das Gesamtergebnis aller Wettkämpfe, bei denen im Feld "Series" ein Eintrag
+vorhanden ist, siehe :ref:`events`. Die Berechnung des Gesamtergebnisses wird in den :ref:`settings` festgelegt.
+
+Reload
+
+   Lädt das Gesamtergebnis neu.
+
+
+Settings ...
+
+   Öffnet den Dialog mit den Einstellungen für die Berechnung des Gesamtergebnisses, siehe :ref:`settings`.
+
+
+Print results ...
+
+   Erstellt das Gesamtergebnis als PDF-Datei. Mit der Option "Landscape" wird die Seite im Querformat ausgegeben.
+
+
+CSV results ...
+
+   Erstellt das Gesamtergebnis als CSV-Datei. Es werden alle gewerteten Teilnehmer ausgegeben ("All scored").
+
+
 .. _settings:
 
 Settings
@@ -467,6 +519,37 @@ Club
    muss der Verein vorab in die Liste :ref:`clubs` eingetragen werden.
 
 
+.. _merge_competitors:
+
+Wettkämpfer zusammenführen
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Mit "Merge competitors ..." können zwei Wettkämpfer zu einem zusammengeführt werden,
+z.B. wenn derselbe Läufer in zwei Wettkämpfen unterschiedlich geschrieben wurde.
+
+Im Dialog werden mit "Choose ..." die beiden Wettkämpfer (Competitor 1 und Competitor 2) ausgewählt.
+War vor dem Öffnen des Dialogs ein Wettkämpfer selektiert, ist er als Competitor 1 vorbelegt.
+Mit "Merge 1 --> 2" wird Competitor 1 gelöscht und bei **allen** Wettkämpfen durch Competitor 2 ersetzt,
+mit "Merge 2 --> 1" umgekehrt. Vor der Ausführung muss die Sicherheitsabfrage bestätigt werden.
+
+.. warning::
+
+   Das Zusammenführen kann nicht rückgängig gemacht werden.
+
+.. warning::
+
+   Haben die beiden Wettkämpfer unterschiedliches Geschlecht oder Geburtsjahr, werden diese Daten
+   bei allen Wettkämpfen durch die des verbleibenden Wettkämpfers ersetzt.
+
+.. note::
+
+   Sind beide Wettkämpfer im selben Wettkampf eingetragen, gibt es dort nach dem Zusammenführen zwei Einträge
+   desselben Wettkämpfers. Es wird keine Fehlermeldung ausgegeben. Der überzählige Eintrag sollte vorher in
+   :ref:`entries` gelöscht werden.
+
+Siehe auch das Tutorial "Berechnung und Anzeige des Gesamtergebnisses".
+
+
 .. _clubs:
 
 Clubs
@@ -483,3 +566,55 @@ kann dieser Verein nicht gelöscht werden.
 Name
 
    Name des Vereins.
+
+
+.. _si_reader:
+
+SI Reader
+---------
+
+Das Registerblatt "SI Reader" zeigt alle seit dem Start des Servers gelesenen SI-Cards des selektierten Wettkampfes.
+Es kann nur geöffnet werden, wenn ein Wettkampf mit einem Key selektiert ist, siehe :ref:`events`.
+Eine ausführliche Beschreibung finden Sie im Abschnitt "Anzeige der gelesenen SI-Card Daten" im Tutorial.
+
+Über der Tabelle werden Name und Datum des selektierten Wettkampfes angezeigt.
+
+Read
+
+   Zeitpunkt, zu dem die SI-Card gelesen wurde.
+
+
+Control card
+
+   Nummer der gelesenen SI-Card.
+
+
+Status
+
+   Status des Ergebnisses (z.B. OK, MP, DNF) oder der Grund, warum die SI-Card keinem Teilnehmer
+   zugeordnet werden konnte.
+
+
+Time
+
+   Laufzeit.
+
+
+Name
+
+   Name des Teilnehmers, dem die SI-Card zugeordnet wurde.
+
+
+Class
+
+   Kategorie des Teilnehmers.
+
+
+Missing controls
+
+   Nicht gestempelte Posten.
+
+
+Die Zeilen werden bei erfolgreichem Lauf grün, bei fehlerhaftem Lauf rot und bei nicht zuordenbarer SI-Card gelb dargestellt.
+Unter der Tabelle werden der Status der Auslesestation und, falls aktiviert, der Status der Übertragung der Ergebnisse
+zu einem anderen ooresults-server angezeigt.

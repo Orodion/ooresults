@@ -1,5 +1,5 @@
-Delopment workflow
-==================
+Development workflow
+====================
 
 .. only:: html
 
@@ -121,13 +121,16 @@ Building the documentation
 .. code-block::
 
    python -m venv <venv-sphinx>
-   <venv-sphinx>/bin/python -m pip install sphinx sphinx-multiproject
+   <venv-sphinx>/bin/python -m pip install -r <git-local>/docs/requirements.txt
    
    cd <git-local>/docs
    source <venv-sphinx>/bin/activate
    
    make html
    make latexpdf
+   
+   PROJECT=user_en make html
+   PROJECT=user_en make latexpdf
    
    PROJECT=dev make html
    PROJECT=dev make latexpdf

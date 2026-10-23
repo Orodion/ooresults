@@ -373,6 +373,58 @@ Controls
    Valid entries are e.g. "121-141-122-124" or "121 - 141 - 122 - 124".
 
 
+.. _results:
+
+Results
+-------
+
+The "Results" tab shows the results of the selected event, sorted by class.
+A description can be found in the section "Displaying the results" in the tutorial.
+
+Reload
+
+   Reloads the results.
+
+
+Print results ...
+
+   Creates the result list as a PDF file. With the option "Include not started competitors"
+   competitors who did not start are listed as well.
+
+
+Print split times ...
+
+   Creates the split times as a PDF file. With the option "Landscape" the page is printed in landscape orientation.
+
+
+.. _series:
+
+Series
+------
+
+The "Series" tab shows the overall result of all events that have an entry in the field "Series", see :ref:`events`.
+The calculation of the overall result is defined in the :ref:`settings`.
+
+Reload
+
+   Reloads the overall result.
+
+
+Settings ...
+
+   Opens the dialog with the settings for the calculation of the overall result, see :ref:`settings`.
+
+
+Print results ...
+
+   Creates the overall result as a PDF file. With the option "Landscape" the page is printed in landscape orientation.
+
+
+CSV results ...
+
+   Creates the overall result as a CSV file. All scored competitors are output ("All scored").
+
+
 .. _settings:
 
 Settings
@@ -463,6 +515,37 @@ Club
    the club has to be entered in advance in the list :ref:`clubs`.
 
 
+.. _merge_competitors:
+
+Merging competitors
+~~~~~~~~~~~~~~~~~~~
+
+With "Merge competitors ..." two competitors can be merged into one,
+e.g. if the same runner was spelled differently in two events.
+
+In the dialog, the two competitors (Competitor 1 and Competitor 2) are selected with "Choose ...".
+If a competitor was selected before the dialog was opened, he or she is preset as Competitor 1.
+With "Merge 1 --> 2" Competitor 1 is deleted and replaced by Competitor 2 in **all** events,
+with "Merge 2 --> 1" the other way round. The confirmation prompt must be confirmed before the merge is carried out.
+
+.. warning::
+
+   Merging cannot be undone.
+
+.. warning::
+
+   If the two competitors have a different gender or year of birth, this data is replaced
+   by that of the remaining competitor in all events.
+
+.. note::
+
+   If both competitors are entered in the same event, the event contains two entries of the same competitor
+   after the merge. No error message is displayed. The surplus entry should be deleted beforehand in
+   :ref:`entries`.
+
+See also the tutorial "Calculating and displaying the overall result".
+
+
 .. _clubs:
 
 Clubs
@@ -479,3 +562,54 @@ this club cannot be deleted.
 Name
 
    Name of the club.
+
+
+.. _si_reader:
+
+SI Reader
+---------
+
+The "SI Reader" tab shows all SI cards of the selected event that have been read since the server was started.
+It can only be opened if an event with a key is selected, see :ref:`events`.
+A detailed description can be found in the section "Displaying the SI card data that has been read" in the tutorial.
+
+The name and date of the selected event are displayed above the table.
+
+Read
+
+   Time at which the SI card was read.
+
+
+Control card
+
+   Number of the SI card that has been read.
+
+
+Status
+
+   Status of the result (e.g. OK, MP, DNF) or the reason why the SI card could not be assigned to a competitor.
+
+
+Time
+
+   Running time.
+
+
+Name
+
+   Name of the competitor to whom the SI card was assigned.
+
+
+Class
+
+   Class of the competitor.
+
+
+Missing controls
+
+   Controls that were not punched.
+
+
+Rows are displayed in green for a successful run, in red for a mispunch and in yellow if the SI card could not be assigned.
+Below the table the status of the readout station and, if enabled, the status of the transmission of the results
+to another ooresults-server are displayed.
