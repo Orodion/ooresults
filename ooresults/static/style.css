@@ -1,11 +1,73 @@
+/* Colour themes: light (default variables), dark, and automatic (follows the
+   system setting unless data-theme="light"|"dark" is set on <html>). */
+:root {
+  color-scheme: light dark;
+  --border: black;
+  --group-bg: #D6EEEE;
+  --selected-bg: brown;
+  --selected-fg: #FFF;
+  --modal-bg: #fefefe;
+  --modal-border: #888;
+  --close: #aaa;
+  --tab-border: #ccc;
+  --tab-hover: #ddd;
+  --tab-active: #ccc;
+  --bg-red: #ff7070;
+  --bg-yellow: #ffff00;
+  --bg-green: #70ff70;
+  --fg-red: red;
+  --fg-green: green;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --border: #999;
+  --group-bg: #2c4a4a;
+  --selected-bg: #9a3b3b;
+  --modal-bg: #2b2b2b;
+  --modal-border: #666;
+  --close: #888;
+  --tab-border: #555;
+  --tab-hover: #3a3a3a;
+  --tab-active: #4a4a4a;
+  --bg-red: #8a2f2f;
+  --bg-yellow: #7d7a1a;
+  --bg-green: #2f7a2f;
+  --fg-red: #ff6b6b;
+  --fg-green: #5fd75f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --border: #999;
+    --group-bg: #2c4a4a;
+    --selected-bg: #9a3b3b;
+    --modal-bg: #2b2b2b;
+    --modal-border: #666;
+    --close: #888;
+    --tab-border: #555;
+    --tab-hover: #3a3a3a;
+    --tab-active: #4a4a4a;
+    --bg-red: #8a2f2f;
+    --bg-yellow: #7d7a1a;
+    --bg-green: #2f7a2f;
+    --fg-red: #ff6b6b;
+    --fg-green: #5fd75f;
+  }
+}
+
 table.dt, th.dt, td.dt {
-  border: 0.5px solid black;
+  border: 0.5px solid var(--border);
   border-collapse: collapse;
   padding: 5px;
 }
 
 table.dte {
-  border: 1px solid black;
+  border: 1px solid var(--border);
   border-right: none;
   border-top: none;
   border-bottom: none;
@@ -19,13 +81,13 @@ tr.dth {
 }
 
 th.merge, td.merge {
-  border: 1px solid black;
+  border: 1px solid var(--border);
   border-collapse: collapse;
   padding: 5px;
 }
 
 th.dth {
-  border: 1px solid black;
+  border: 1px solid var(--border);
   border-left: none;
   border-collapse: separate;
   border-spacing: 0;
@@ -33,7 +95,7 @@ th.dth {
 }
 
 th.dte, td.dte {
-  border: 1px solid black;
+  border: 1px solid var(--border);
   border-left: none;
   border-top: none;
   border-collapse: separate;
@@ -44,12 +106,12 @@ th.dte, td.dte {
 th.h1 {
   padding-left: 25px;
   text-align: left;
-  background-color: #D6EEEE;
+  background-color: var(--group-bg);
 }
 
 .selected {
-    background-color: brown;
-    color: #FFF;
+    background-color: var(--selected-bg);
+    color: var(--selected-fg);
 }
 
 /* Area including the "add entries ...", "edit entries ..." buttons */
@@ -96,10 +158,10 @@ th.h1 {
 
 /* Modal Content/Box */
 .modal-content {
-  background-color: #fefefe;
+  background-color: var(--modal-bg);
   margin: 5% 5% 0%; /* top, left and right, bottom */
   padding: 20px;
-  border: 1px solid #888;
+  border: 1px solid var(--modal-border);
   max-height: 80%;
   overflow: auto;
 }
@@ -107,7 +169,7 @@ th.h1 {
 /* Modal Content/Box */
 .modal-content-progress {
   border-radius: 8px;
-  background-color: #fefefe;
+  background-color: var(--modal-bg);
   width: 50%;
   height: 20%;
   display: flex;
@@ -119,7 +181,7 @@ th.h1 {
 
 /* The Close Button */
 .close {
-  color: #aaa;
+  color: var(--close);
   float: right;
   font-size: 28px;
   font-weight: bold;
@@ -127,7 +189,7 @@ th.h1 {
 
 .close:hover,
 .close:focus {
-  color: black;
+  color: CanvasText;
   text-decoration: none;
   cursor: pointer;
 }
@@ -141,8 +203,16 @@ label[disabled] {
   opacity: 0.4;
 }
 
-.bgr {background-color: #ff7070;}
-.bgy {background-color: #ffff00;}
-.bgg {background-color: #70ff70;}
+.bgr {background-color: var(--bg-red);}
+.bgy {background-color: var(--bg-yellow);}
+.bgg {background-color: var(--bg-green);}
 .s1 {font-size: 1.5em;}
 .s2 {font-size: 2.5em;}
+.fg-red {color: var(--fg-red);}
+.fg-green {color: var(--fg-green);}
+
+/* Theme selector */
+.theme-select {
+  float: right;
+  margin: 4px 8px;
+}

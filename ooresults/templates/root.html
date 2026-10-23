@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>ooresults</title>
+    <script src="mystatic/theme.js"></script>
     <link rel="stylesheet" href="mystatic/style.css"/>
     <link rel="stylesheet" href="mystatic/style-tab.css"/>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
@@ -12,6 +13,13 @@
     <meta http-equiv="Expires" content="0"/>
 </head>
 <body>
+
+<select class="theme-select" id="themeSelect" onchange="setTheme(this.value)" title="Colour theme">
+    <option value="auto">Auto</option>
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+</select>
+<script>document.getElementById("themeSelect").value = getTheme();</script>
 
 <a href="admin">Administration</a>
 

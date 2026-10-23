@@ -637,6 +637,7 @@
 
     function tStatusUpdate(row) {
         cells = row.getElementsByTagName("td");
+        cells[4].classList.remove("fg-red", "fg-green");
         if (cells[0].innerHTML == "") {
             if (cells[3].innerHTML == "") {
                 cells[4].innerHTML = "Removed";
@@ -646,10 +647,10 @@
         } else {
             if (cells[3].innerHTML == "") {
                 cells[4].innerHTML = "Missing";
-                cells[4].style.color = "red";
+                cells[4].classList.add("fg-red");
             } else {
                 cells[4].innerHTML = "OK";
-                cells[4].style.color = "green";
+                cells[4].classList.add("fg-green");
             }
         }
     }
@@ -788,7 +789,7 @@
         element = document.getElementById("edit_punch_command");
         label = element.getElementsByTagName("label");
         for (i = 0; i < label.length; i++) {
-            label[i].style.color = 'inherit';
+            label[i].classList.remove('fg-red');
         }
 
         updateDisplayedParams('entr_ep_edit');
