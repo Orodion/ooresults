@@ -24,11 +24,11 @@ def format(time: int) -> str:
 
 def color(status: ResultStatus) -> str:
     if status == ResultStatus.OK:
-        return "#70ff70"  # green
+        return "bgg"
     elif status in (ResultStatus.MISSING_PUNCH, ResultStatus.DID_NOT_FINISH, ResultStatus.OVER_TIME):
-        return "#ff7070"  # red
+        return "bgr"
     else:
-        return "#ffff00"  # yellow
+        return "bgy"
 
 
 def missing(status: ResultStatus, missing_controls: List[str]) -> str:
@@ -86,7 +86,7 @@ def missing(status: ResultStatus, missing_controls: List[str]) -> str:
         <tbody>
         % for result in messages:
             % if event and event.id == result.get("eventId", "-2"):
-                <tr class="rdt" style="background-color: ${color(result.get("status"))}">
+                <tr class="rdt ${color(result.get("status"))}">
                     <td class="dte">${result.get("entryTime", "")}</td>
                     <td class="dte" style="text-align:right">${format_card(result.get("controlCard"))}</td>
                     <td class="dte">${MAP_STATUS[result.get("status")]}</td>
@@ -109,22 +109,22 @@ def missing(status: ResultStatus, missing_controls: List[str]) -> str:
 
 <table id="read.status" style="text-align: left">
     % if status is None or status == "readerOffline":
-        <tr style="color:red;">
+        <tr class="fg-red">
             <th style="padding-right: 10px">Card reader status:</th>
             <td id="read.reader_status">Offline</td>
         </tr>
     % elif status in ["readerConnected", "cardRead", "cardRemoved"]:
-        <tr style="color:green;">
+        <tr class="fg-green">
             <th style="padding-right: 10px">Card reader status:</th>
             <td id="read.reader_status">Connected</td>
         </tr>
     % elif status == "readerDisconnected":
-        <tr style="color:red;">
+        <tr class="fg-red">
             <th style="padding-right: 10px">Card reader status:</th>
             <td id="read.reader_status">Disconnected</td>
         </tr>
     % elif status == "cardInserted":
-        <tr style="color:green;">
+        <tr class="fg-green">
             <th style="padding-right: 10px">Card reader status:</th>
             <td id="read.reader_status">Reading card</td>
         </tr>
@@ -132,12 +132,12 @@ def missing(status: ResultStatus, missing_controls: List[str]) -> str:
 
     % if stream_status is not None:
         % if streaming_status_ok(stream_status):
-            <tr style="color:green;">
+            <tr class="fg-green">
                 <th style="padding-right: 10px">Stream status:</th>
                 <td>${STREAMING_STATUS[stream_status]}</td>
             </tr>
         % else:
-            <tr style="color:red;">
+            <tr class="fg-red">
                 <th style="padding-right: 10px">Stream status:</th>
                 <td>${STREAMING_STATUS[stream_status]}</td>
             </tr>

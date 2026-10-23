@@ -7,6 +7,7 @@
     <head>
         <meta charset="UTF-8">
         <title>SI reader</title>
+        <script src="mystatic/theme.js"></script>
         <link rel="stylesheet" href="mystatic/style.css"/>
         <link rel="stylesheet" href="mystatic/style-tab.css"/>
         <style>
@@ -118,31 +119,31 @@
 
             function message () {
                 var text = '';
-                var color = 'black';
+                var color = '';
 
                 switch (status) {
                     case 'offline':
                         text = 'Offline';
-                        color = 'red';
+                        color = 'fg-red';
                         break;
                     case 'unauthorized':
                         text = 'Authorization error';
-                        color = 'red';
+                        color = 'fg-red';
                         break;
                     case 'error':
                         text = 'Error';
-                        color = 'red';
+                        color = 'fg-red';
                         break;
                     case 'online':
                         text = 'Online';
                         break;
                     case 'readerOffline':
                         text = 'Card reader offline';
-                        color = 'red';
+                        color = 'fg-red';
                         break;
                     case 'readerDisconnected':
                         text = 'Card reader disconnected';
-                        color = 'red';
+                        color = 'fg-red';
                         break;
                     case 'readerConnected':
                     case 'cardRemoved':
@@ -157,7 +158,7 @@
                         } else {
                             text = 'Event deleted';
                         }
-                        color = 'red';
+                        color = 'fg-red';
                         break;
 
                 }
@@ -187,7 +188,7 @@
                     '</tr>' +
                     '</table>' +
                     '</div>' +
-                    '<p id="si1.message" class="s2" style="padding-left: 4%; color: ' + color + '">' + text + '</p>';
+                    '<p id="si1.message" class="s2 ' + color + '" style="padding-left: 4%">' + text + '</p>';
             }
 
             function showResult(resultData) {

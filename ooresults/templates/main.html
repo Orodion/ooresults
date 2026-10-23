@@ -21,6 +21,11 @@
     <button id="tab.competitors" class="tablinks" onclick="comp_update(); openTab(event, 'Competitors')">Competitors</button>
     <button id="tab.clubs" class="tablinks" onclick="clb_update(); openTab(event, 'Clubs')">Clubs</button>
     <button id="tab.reader" disabled class="tablinks" onclick="read_update(); openTab(event, 'Reader')">SI Reader</button>
+    <select class="theme-select" id="themeSelect" onchange="setTheme(this.value)" title="Colour theme">
+      <option value="auto">Auto</option>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
   </div>
   <div id="ttabs-margin" style="height: 10px; background-color: Canvas" hidden></div>
 </div>
@@ -52,6 +57,7 @@
         document.getElementById("tab.results").disabled = true;
         document.getElementById("tab.reader").disabled = true;
         document.getElementById('Events').style.display = "block";
+        document.getElementById("themeSelect").value = getTheme();
     }
 </script>
 
@@ -192,9 +198,9 @@ ${reader_tab_content | n}
                 }
 
                 if (notChanged) {
-                    label.style.color = "inherit";
+                    label.classList.remove("fg-red");
                 } else {
-                    label.style.color = "red";
+                    label.classList.add("fg-red");
                 }
             }
         }

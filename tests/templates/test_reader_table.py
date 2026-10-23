@@ -377,7 +377,7 @@ def test_cardreader_status(
     # status
     table = html.find(path=".//table[@id='read.status']")
     assert [child.tag for child in table] == ["tr"]
-    assert table[0].attrib["style"] == f"color:{color};"
+    assert table[0].attrib["class"] == f"fg-{color}"
     assert [th.text for th in table.findall("./tr[1]/th")] == ["Card reader status:"]
     assert [td.text for td in table.findall("./tr[1]/td")] == [text]
 
@@ -428,7 +428,7 @@ def test_stream_status(event: EventType, status: Status, text: str, color: str) 
     assert [child.tag for child in table] == ["tr", "tr"]
     assert [th.text for th in table.findall("./tr[1]/th")] == ["Card reader status:"]
     assert [td.text for td in table.findall("./tr[1]/td")] == ["Offline"]
-    assert table[1].attrib["style"] == f"color:{color};"
+    assert table[1].attrib["class"] == f"fg-{color}"
     assert [th.text for th in table.findall("./tr[2]/th")] == ["Stream status:"]
     assert [td.text for td in table.findall("./tr[2]/td")] == [text]
 
@@ -566,7 +566,7 @@ def test_missing_controls_if_status_is_ok(
     rows = table.findall("./tbody[1]/tr")
     assert len(rows) == 1
     # row 1
-    assert rows[0].attrib["style"] == "background-color: #70ff70"
+    assert rows[0].attrib["class"] == "rdt bgg"
     assert [td.text for td in rows[0].findall(".//td")] == [
         "10:28:03",
         "7509749",
@@ -586,15 +586,15 @@ def test_missing_controls_if_status_is_ok(
 @pytest.mark.parametrize(
     "result_status, color",
     [
-        (ResultStatus.INACTIVE, "#ffff00"),
-        (ResultStatus.ACTIVE, "#ffff00"),
-        (ResultStatus.FINISHED, "#ffff00"),
-        (ResultStatus.OK, "#70ff70"),
-        (ResultStatus.MISSING_PUNCH, "#ff7070"),
-        (ResultStatus.DID_NOT_START, "#ffff00"),
-        (ResultStatus.DID_NOT_FINISH, "#ff7070"),
-        (ResultStatus.OVER_TIME, "#ff7070"),
-        (ResultStatus.DISQUALIFIED, "#ffff00"),
+        (ResultStatus.INACTIVE, "bgy"),
+        (ResultStatus.ACTIVE, "bgy"),
+        (ResultStatus.FINISHED, "bgy"),
+        (ResultStatus.OK, "bgg"),
+        (ResultStatus.MISSING_PUNCH, "bgr"),
+        (ResultStatus.DID_NOT_START, "bgy"),
+        (ResultStatus.DID_NOT_FINISH, "bgr"),
+        (ResultStatus.OVER_TIME, "bgr"),
+        (ResultStatus.DISQUALIFIED, "bgy"),
     ],
 )
 def test_messages_background_color_depends_on_status(
@@ -637,4 +637,4 @@ def test_messages_background_color_depends_on_status(
     rows = table.findall("./tbody[1]/tr")
     assert len(rows) == 1
     # row 1
-    assert rows[0].attrib["style"] == f"background-color: {color}"
+    assert rows[0].attrib["class"] == f"rdt {color}"
