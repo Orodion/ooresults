@@ -47,6 +47,12 @@ multiproject_projects = {
             "project": "ooresults",
         },
     },
+    "user_en": {
+        "use_config_file": False,
+        "config": {
+            "project": "ooresults",
+        },
+    },
     "dev": {
         "use_config_file": False,
         "config": {
@@ -62,7 +68,7 @@ current_project = get_project(multiproject_projects)
 
 if current_project == "user":
     language = "de"
-elif current_project == "dev":
+elif current_project in ("user_en", "dev"):
     language = "en"
 
 
