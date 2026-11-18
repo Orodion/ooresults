@@ -45,6 +45,7 @@ import ooresults.handler.si1
 from ooresults import configuration
 from ooresults import model
 from ooresults.repo.sqlite_repo import SqliteRepo
+from ooresults.user import LoginThrottle
 from ooresults.user import Users
 from ooresults.utils import render
 from ooresults.utils import rental_cards
@@ -107,25 +108,59 @@ def after_request() -> None:
     )
 
 
+def authenticate() -> Optional[bottle.HTTPResponse]:
+    """Check the credentials of the HTTP Basic authentication.
+
+    Returns None if the credentials are valid, otherwise the error response.
+    Failed logins are logged and an address is locked for some time after
+    too many failed logins.
+    """
+
+    def unauthorized() -> bottle.HTTPResponse:
+        headers = {"WWW-Authenticate": 'Basic realm="Authentication required"'}
+        return bottle.HTTPResponse(
+            status=401, headers=headers, body=render.unauthorized()
+        )
+
+    auth = bottle.request.environ.get("HTTP_AUTHORIZATION", None)
+    if auth is None:
+        return unauthorized()
+
+    address = bottle.request.remote_addr or ""
+    if LoginThrottle.is_locked(address=address):
+        logging.warning(f"Login rejected, too many failed logins from {address}")
+        return bottle.HTTPResponse(
+            status=429,
+            headers={"Retry-After": str(LoginThrottle.LOCK_TIME)},
+            body="Too many failed logins, please try again later",
+        )
+
+    username: Optional[str] = None
+    try:
+        auth = re.sub("^Basic ", "", auth)
+        auth = base64.b64decode(auth.encode("ascii")).decode("utf8")
+        username, password = auth.split(":", 1)
+        valid = Users.check(username=username, password=password)
+    except Exception:
+        valid = False
+
+    if not valid:
+        LoginThrottle.add_failure(address=address)
+        user = f" for user {username!r}" if username is not None else ""
+        logging.warning(f"Failed login from {address}{user}")
+        return unauthorized()
+
+    LoginThrottle.reset(address=address)
+    return None
+
+
 def my_plugin(callback):
     def wrapper(*args, **kwargs):
         path = bottle.request.environ["PATH_INFO"]
         if path not in ("/", "/favicon.ico") and not path.startswith("/mystatic/"):
-            try:
-                auth = bottle.request.environ.get("HTTP_AUTHORIZATION", None)
-                if auth is not None:
-                    auth = re.sub("^Basic ", "", auth)
-                    auth = base64.b64decode(auth.encode("ascii")).decode("utf8")
-                    username, password = auth.split(":", 1)
-                    if not Users.check(username=username, password=password):
-                        raise PermissionError
-                else:
-                    raise PermissionError
-            except Exception:
-                headers = {"WWW-Authenticate": 'Basic realm="Authentication required"'}
-                return bottle.HTTPResponse(
-                    status=401, headers=headers, body=render.unauthorized()
-                )
+            response = authenticate()
+            if response is not None:
+                return response
 
         if not request_allowed(
             method=bottle.request.method,

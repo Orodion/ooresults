@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+import json
 import pathlib
 import subprocess
 import sys
@@ -42,6 +43,10 @@ pytest_plugins = [
 @pytest.fixture(scope="session")
 def ooresults_server() -> Iterator[subprocess.Popen]:
     with tempfile.TemporaryDirectory() as d_name:
+        # the webtests log in with the user admin and the password admin
+        users = [{"username": "admin", "password": "admin"}]
+        (pathlib.Path(d_name) / "users.json").write_text(json.dumps(users))
+
         p = subprocess.Popen([sys.executable, "-m", "ooresults.server", "-p", d_name])
         yield p
         p.kill()
