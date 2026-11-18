@@ -397,6 +397,16 @@ class PersonRaceResult(fastclasses_json.JSONMixin):
                 p.recalculate_time(start_time=self.start_time)
                 self.split_times.append(p)
 
+        # compute running time
+        # a running time less than or equal to 0 (finish time not after start
+        # time) is invalid, the result gets no time and is handled as missing punch
+        run_time: Optional[int] = None
+        if self.start_time is not None and self.finish_time is not None:
+            run_time = int((self.finish_time - self.start_time).total_seconds())
+            if run_time <= 0:
+                run_time = None
+                missing_punch = True
+
         # compute result status
         # - if no controls are punched the new status is inactive
         # - if list of controls is empty the new status is finished
@@ -415,11 +425,7 @@ class PersonRaceResult(fastclasses_json.JSONMixin):
         else:
             self.status = ResultStatus.OK
 
-        # compute running time
-        run_time: Optional[int] = None
-        if self.start_time is not None and self.finish_time is not None:
-            run_time = int((self.finish_time - self.start_time).total_seconds())
-            self.time = run_time
+        self.time = run_time
 
         # handle voided legs
         if class_params.otype == "standard" and class_params.voided_legs:

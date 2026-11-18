@@ -152,8 +152,14 @@ def build_total_results(
                 if class_info.params.otype != "score":
                     if e.rank is not None:
                         winner_time = ranked_entries[0].entry.result.time
-                        if winner_time is not None and e.entry.result.time is not None:
-                            points = winner_time / e.entry.result.time
+                        time = e.entry.result.time
+                        if (
+                            winner_time is not None
+                            and winner_time > 0
+                            and time is not None
+                            and time > 0
+                        ):
+                            points = winner_time / time
                     elif entry.result.status == ResultStatus.OK and entry.not_competing:
                         points = 0
                     elif entry.result.status in (
