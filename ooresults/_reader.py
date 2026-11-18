@@ -26,6 +26,7 @@ import pathlib
 import ssl
 import threading
 import time
+from queue import Empty
 from queue import Queue
 from typing import Any
 from typing import Literal
@@ -62,6 +63,14 @@ EntryType: TypeAlias = Literal[
 ]
 
 
+# seconds to wait for the answer of the server
+RECEIVE_TIMEOUT = 10
+# seconds between two ping messages and seconds to wait for the pong message;
+# a broken connection is detected after at most PING_INTERVAL + PING_TIMEOUT
+PING_INTERVAL = 30
+PING_TIMEOUT = 10
+
+
 class WebSocketClient(threading.Thread):
     def __init__(
         self,
@@ -80,7 +89,8 @@ class WebSocketClient(threading.Thread):
         self.ssl_verify = ssl_verify
         self.ws: Optional[websocket.WebSocketApp] = None
         self.opened = False
-        self.queue: Queue[str | bytes] = Queue()
+        # None is put into the queue if the connection is closed
+        self.queue: Queue[Optional[str | bytes]] = Queue()
         self.entry_type: EntryType = "readerDisconnected"
         self.entry_time = datetime.datetime.now()
         self.card: Optional[str] = None
@@ -111,7 +121,11 @@ class WebSocketClient(threading.Thread):
                 on_message=self.on_message,
                 on_error=self.on_error,
             )
-            self.ws.run_forever(sslopt=sslopt)
+            self.ws.run_forever(
+                sslopt=sslopt,
+                ping_interval=PING_INTERVAL,
+                ping_timeout=PING_TIMEOUT,
+            )
             time.sleep(5)
 
     def set_state(
@@ -132,7 +146,7 @@ class WebSocketClient(threading.Thread):
             item["controlCard"] = self.card
         return self.send_and_receive(item=item)
 
-    def send_and_receive(self, item: dict, timeout: Optional[int] = None) -> dict:
+    def send_and_receive(self, item: dict, timeout: float = RECEIVE_TIMEOUT) -> dict:
         self.clear()
         data = bz2.compress(json.dumps(item).encode())
         self.send(data)
@@ -140,15 +154,25 @@ class WebSocketClient(threading.Thread):
 
     def send(self, data: bytes) -> None:
         if self.ws is not None and self.opened:
-            self.ws.send(data, opcode=2)
+            try:
+                self.ws.send(data, opcode=2)
+            except (websocket.WebSocketException, OSError) as e:
+                print(f"Could not send data to server: {str(e)}")
         else:
             print("Not connected to server - could not send data")
 
-    def receive(self, timeout: Optional[int] = None) -> dict:
-        if self.opened:
-            return json.loads(self.queue.get(timeout=timeout))
-        else:
+    def receive(self, timeout: float = RECEIVE_TIMEOUT) -> dict:
+        if not self.opened:
             return {}
+        try:
+            message = self.queue.get(timeout=timeout)
+        except Empty:
+            print("No answer from server")
+            return {}
+        if message is None:
+            print("Connection closed - no answer from server")
+            return {}
+        return json.loads(message)
 
     def clear(self) -> None:
         while not self.queue.empty():
@@ -157,7 +181,9 @@ class WebSocketClient(threading.Thread):
     def on_close(self, wsapp, close_status_code, close_msg) -> None:
         if self.opened:
             print("Connection closed")
-        self.opened = False
+            self.opened = False
+            # wake up a thread waiting for an answer
+            self.queue.put(None)
 
     def on_open(self, wsapp) -> None:
         if not self.opened:
