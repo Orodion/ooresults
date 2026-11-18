@@ -216,6 +216,95 @@ class PersonRaceResult(fastclasses_json.JSONMixin):
             s.status = SpStatus.ADDITIONAL
         self.split_times = [s for s in self.split_times if s.si_punch_time is not None]
 
+    def _match_in_order(
+        self,
+        controls: list[str],
+        split_times: list[SplitTime],
+        penalty_controls: Optional[int],
+    ) -> tuple[list[SplitTime], int, bool]:
+        """Match the punches with the controls of a course with a fixed order.
+
+        The punches are matched with the longest common subsequence of the
+        course controls and the punched control codes. So a single control
+        punched at a wrong position is only one missing control and does not
+        invalidate the following correctly punched controls.
+
+        Returns the new list of split times, the penalties for missing controls
+        and whether controls are missing without a penalty rule.
+        """
+
+        def matches(control: str, split_time: SplitTime) -> bool:
+            return (
+                split_time.punch_time is not None and control == split_time.control_code
+            )
+
+        # lcs[i][j] = length of the longest common subsequence of
+        # controls[i:] and split_times[j:]
+        n, m = len(controls), len(split_times)
+        lcs = [[0] * (m + 1) for _ in range(n + 1)]
+        for i in reversed(range(n)):
+            for j in reversed(range(m)):
+                if matches(controls[i], split_times[j]):
+                    lcs[i][j] = lcs[i + 1][j + 1] + 1
+                else:
+                    lcs[i][j] = max(lcs[i + 1][j], lcs[i][j + 1])
+
+        result: list[SplitTime] = []
+        penalties = 0
+        missing_punch = False
+
+        def append(split_time: SplitTime, status: Optional[SpStatus]) -> None:
+            split_time.status = status
+            split_time.recalculate_time(start_time=self.start_time)
+            result.append(split_time)
+
+        def append_missing(control: str) -> None:
+            # reuse a removed split time as missing split time
+            candidates = []
+            for p in reversed(result):
+                if p.status is None:
+                    candidates.append(p)
+                else:
+                    break
+            for p in reversed(candidates):
+                if control == p.control_code:
+                    p.status = SpStatus.MISSING
+                    break
+            else:
+                result.append(SplitTime(control_code=control, status=SpStatus.MISSING))
+
+        def skip_punch(i: int, j: int) -> bool:
+            # skip the punch if this gives a longer common subsequence; if both
+            # ways are equal, skip the punch only if the control is punched later
+            if lcs[i][j + 1] != lcs[i + 1][j]:
+                return lcs[i][j + 1] > lcs[i + 1][j]
+            return any(matches(controls[i], p) for p in split_times[j + 1 :])
+
+        i, j = 0, 0
+        while i < n:
+            if j < m and split_times[j].punch_time is None:
+                append(split_times[j], None)
+                j += 1
+            elif j < m and matches(controls[i], split_times[j]):
+                append(split_times[j], SpStatus.OK)
+                i += 1
+                j += 1
+            elif j < m and skip_punch(i, j):
+                append(split_times[j], SpStatus.ADDITIONAL)
+                j += 1
+            else:
+                append_missing(controls[i])
+                if penalty_controls is not None:
+                    penalties += penalty_controls
+                else:
+                    missing_punch = True
+                i += 1
+
+        for p in split_times[j:]:
+            append(p, SpStatus.ADDITIONAL if p.punch_time is not None else None)
+
+        return result, penalties, missing_punch
+
     def compute_result(
         self,
         controls: list[str],
@@ -345,57 +434,12 @@ class PersonRaceResult(fastclasses_json.JSONMixin):
 
         else:
             # controls must be visited in the correct order
-            self.split_times = []
-            for control in controls:
-                while split_times and split_times[0].punch_time is None:
-                    p0 = split_times.pop(0)
-                    p0.status = None
-                    p0.recalculate_time(start_time=self.start_time)
-                    self.split_times.append(p0)
-
-                for i, p in enumerate(split_times):
-                    if control == p.control_code and p.punch_time is not None:
-                        for k in range(i):
-                            p0 = split_times.pop(0)
-                            if p0.punch_time is not None:
-                                p0.status = SpStatus.ADDITIONAL
-                            else:
-                                p0.status = None
-                            p0.recalculate_time(start_time=self.start_time)
-                            self.split_times.append(p0)
-                        p0 = split_times.pop(0)
-                        p0.status = SpStatus.OK
-                        p0.recalculate_time(start_time=self.start_time)
-                        self.split_times.append(p0)
-                        break
-                else:
-                    # reuse a removed split time as missing split time
-                    candidates = []
-                    for p in reversed(self.split_times):
-                        if p.status is None:
-                            candidates.append(p)
-                        else:
-                            break
-                    for p in reversed(candidates):
-                        if control == p.control_code:
-                            p.status = SpStatus.MISSING
-                            break
-                    else:
-                        self.split_times.append(
-                            SplitTime(control_code=control, status=SpStatus.MISSING)
-                        )
-                    if class_params.penalty_controls is not None:
-                        penalties_controls += class_params.penalty_controls
-                    else:
-                        missing_punch = True
-
-            for p in split_times:
-                if p.punch_time is not None:
-                    p.status = SpStatus.ADDITIONAL
-                else:
-                    p.status = None
-                p.recalculate_time(start_time=self.start_time)
-                self.split_times.append(p)
+            self.split_times, penalties_controls, missing = self._match_in_order(
+                controls=controls,
+                split_times=split_times,
+                penalty_controls=class_params.penalty_controls,
+            )
+            missing_punch = missing_punch or missing
 
         # compute running time
         # a running time less than or equal to 0 (finish time not after start
