@@ -42,6 +42,8 @@ def create_pdf(
     W_RUNTIME = 15
     W_VALUE = 20
     W_TOTAL = 24
+    W_NAME_MIN = 25
+    W_CLUB_MIN = 20
 
     if landscape:
         W_CLUB = 175
@@ -55,7 +57,9 @@ def create_pdf(
     pdf.add_page()
 
     def cell(w: int, h: Optional[int] = None, text: str = "", align: str = "L") -> None:
-        while pdf.get_string_width(text) > w:
+        if w <= 0:
+            return
+        while text and pdf.get_string_width(text) > w:
             text = text[:-1]
         pdf.cell(w=w, h=h, text=text, align=align)
 
@@ -143,6 +147,14 @@ def create_pdf(
                 width += W_VALUE
             width += W_TOTAL
 
+        # if the value columns leave too little space for the club column
+        # (e.g. in portrait mode), take the missing space from the name column
+        w_club = W_CLUB - width
+        w_name = W_NAME
+        if w_club < W_CLUB_MIN:
+            w_name = max(W_NAME - (W_CLUB_MIN - w_club), W_NAME_MIN)
+            w_club = W_CLUB_MIN
+
         pdf.set_font(family="Carlito", style="B", size=12)
         pdf.cell(text=f"{class_info.name}   ({len(ranked_results)})")
 
@@ -163,11 +175,11 @@ def create_pdf(
         pdf.set_font(family="Carlito", style="I", size=10)
         cell(w=W_RANK, h=None, text="Pl", align="R")
         cell(w=W_SPACE, h=None, text="")
-        cell(w=W_NAME, h=None, text="Name", align="L")
+        cell(w=w_name, h=None, text="Name", align="L")
         cell(w=W_SPACE, h=None, text="")
         cell(w=W_YEAR, h=None, text="Jg", align="R")
         cell(w=W_SPACE, h=None, text="")
-        cell(w=W_CLUB - width, h=None, text="Verein", align="L")
+        cell(w=w_club, h=None, text="Verein", align="L")
         cell(w=W_SPACE, h=None, text="")
         if class_info.params.otype == "score":
             if class_info.params.apply_handicap_rule:
@@ -215,7 +227,7 @@ def create_pdf(
             )
             cell(w=W_SPACE, h=None, text="")
             cell(
-                w=W_NAME,
+                w=w_name,
                 h=None,
                 text=f(entry.last_name) + " " + f(entry.first_name),
                 align="L",
@@ -223,7 +235,7 @@ def create_pdf(
             cell(w=W_SPACE, h=None, text="")
             cell(w=W_YEAR, h=None, text=f(entry.year), align="R")
             cell(w=W_SPACE, h=None, text="")
-            cell(w=W_CLUB - width, h=None, text=f(entry.club_name), align="L")
+            cell(w=w_club, h=None, text=f(entry.club_name), align="L")
             cell(w=W_SPACE, h=None, text="")
             if class_info.params.otype == "score":
                 if class_info.params.apply_handicap_rule:
