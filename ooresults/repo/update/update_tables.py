@@ -35,6 +35,7 @@ def update_tables(db: sqlite3.Connection) -> None:
     cur = db.execute("SELECT value FROM version")
     c = cur.fetchone()
     if not c:
+        db.rollback()
         raise RuntimeError("DB error - table version is empty")
 
     else:
@@ -42,6 +43,7 @@ def update_tables(db: sqlite3.Connection) -> None:
         logging.info(f"DB version is {version}")
 
         if version > VERSION:
+            db.rollback()
             raise RuntimeError(
                 f"DB version to high - version = {version}, but must be at most {VERSION}"
             )
