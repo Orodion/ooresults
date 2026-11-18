@@ -85,8 +85,12 @@ For easy use, a desktop icon with a shortcut to this program can be created.
 
 .. warning::
 
-   For security reasons it is recommended to change the password of the admin user after the first start
-   of the ooresults-server, see chapter :ref:`user_management`.
+   At the first start the user admin is created with a randomly generated password.
+   The password is displayed only once on the console and should be noted,
+   see chapter :ref:`user_management`.
+
+If the database cannot be opened or updated (e.g. because it was created by a newer
+version of ooresults), an error message is displayed and the ooresults-server is not started.
 
 All data is stored in the sqlite database file ooresults.sqlite in the subdirectory .ooresults
 of the user's home directory.

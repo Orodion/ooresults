@@ -153,23 +153,24 @@ The user management for logging in to ooresults is done via the file users.json.
 It is searched for in the subdirectory .ooresults of the user's home directory
 and contains the user names and passwords.
 
-If no such file exists, it is created with the following content:
+If no such file exists, it is created with the user admin and a randomly generated
+password. User name and password are displayed once on the console at the first start, e.g.:
 
 .. code-block::
 
-   [
-       {
-           "username": "admin",
-           "password": "admin"
-       }
-   ]
+   File /home/user/.ooresults/users.json created
+     Username: admin, password: q3Zb8-WkLx7f
+     Please note the password, it is not displayed again.
 
 .. warning::
 
-   For security reasons it is recommended to change the password.
+   The password is not displayed again. If it was not noted, a new password can be entered
+   in users.json (see below).
 
 Changing user names and passwords, creating new users or deleting
-users is done by editing the file directly.
+users is done by editing the file directly. The passwords are entered in plain text.
+At the next start of the ooresults-server they are replaced by a hash value (scrypt),
+e.g. "scrypt$16384$8$1$...". Such an entry is used unchanged.
 For example, the following file contains the three user names Scholz, Habeck and Lindner:
 
 .. code-block::
@@ -192,6 +193,12 @@ For example, the following file contains the three user names Scholz, Habeck and
 .. note::
 
    Changes to users.json only take effect after a restart of the ooresults-server.
+
+On Linux and macOS the file users.json is only readable by its owner.
+
+Failed logins are recorded with address and user name in the log file ooresults_server.log.
+After 5 failed logins within 60 seconds, further logins from the same address are rejected
+for 60 seconds.
 
 .. warning::
 

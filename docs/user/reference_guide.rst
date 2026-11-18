@@ -156,8 +156,10 @@ Status
      Der Läufer hat alle Posten (in richtiger Reihenfolge) gestempelt.
 
    - **MP (mispunched)**:
-   
+
      Der Läufer hat mindestens einen Posten nicht korrekt gestempelt.
+     Dieser Zustand wird auch gesetzt, wenn die Zielzeit nicht nach der Startzeit liegt
+     (z.B. bei einer falschen Startzeit in der Startliste). Das Ergebnis hat dann keine Laufzeit.
 
    - **DNS (did not started)**:
    
@@ -370,6 +372,8 @@ Controls
    Nummern der Kontrollstationen (ohne Start- und Zielstation), aus der die Bahn besteht.
    
    Für die Wettkampfform "Standard" sind die Kontrollstationen in der hier angegebenen Reihenfolge anzulaufen.
+   Ein an falscher Stelle gestempelter Posten zählt dabei als ein fehlender Posten,
+   die übrigen in der richtigen Reihenfolge gestempelten Posten bleiben gültig.
    Für die Wettkampfformen "Net" und "Score" können die Kontrollstationen in beliebiger Reihenfolge angegeben werden.
    
    Die Kontrollstationen werden durch Bindestrich getrennt eingegeben.   

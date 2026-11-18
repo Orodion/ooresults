@@ -2,6 +2,26 @@ Changelog
 =========
 
 
+[Unreleased]
+------------
+
+Changed
+^^^^^^^
+
+- The file users.json is created with the user admin and a random password, which is displayed once on the console. Plain text passwords in users.json are replaced by scrypt hashes.
+- Failed logins are logged; after 5 failed logins within 60 seconds an address is locked for 60 seconds.
+- For courses with a fixed order, a control punched at a wrong position now counts as only one missing control.
+
+Fixed
+^^^^^
+
+- Protection against cross-site request forgery (CSRF) added; the pages can no longer be embedded in pages of other sites.
+- The ooresults-server is no longer started if the database cannot be opened or updated.
+- A finish time not after the start time no longer gives a valid result (status MP, no running time); the series result no longer fails for a running time of 0.
+- Printing results of wide classes in portrait mode no longer ends in an endless loop.
+- The ooresults-reader no longer hangs if the connection to the server breaks.
+
+
 [0.4.11] - 2026-11-17
 ---------------------
 

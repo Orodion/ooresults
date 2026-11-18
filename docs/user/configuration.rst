@@ -153,23 +153,25 @@ Die Benutzerverwaltung zum Anmelden an ooresults erfolgt über die Datei users.j
 Sie wird im Unterverzeichnis .ooresults des Heimverzeichnisses des Benutzers gesucht
 und enthält die Benutzernamen und Passwörter.
 
-Existiert keine solche Datei wird sie mit folgendem Inhalt angelegt:
+Existiert keine solche Datei, wird sie mit dem Benutzer admin und einem zufällig erzeugten
+Passwort angelegt. Benutzername und Passwort werden beim ersten Start einmalig in der Konsole
+angezeigt, z.B.:
 
 .. code-block::
 
-   [
-       {
-           "username": "admin",
-           "password": "admin"
-       }
-   ]
+   File /home/user/.ooresults/users.json created
+     Username: admin, password: q3Zb8-WkLx7f
+     Please note the password, it is not displayed again.
 
 .. warning::
 
-   Aus Sicherheitsgründen wird empfohlen, das Passwort zu ändern.
+   Das Passwort wird nicht erneut angezeigt. Wurde es nicht notiert, kann in users.json
+   ein neues Passwort eingetragen werden (siehe unten).
 
 Änderungen von Benutzernamen und Passwörtern, Anlegen neuer Benutzer oder Löschen
-von Benutzern erfolgt direkt durch Editieren der Datei.
+von Benutzern erfolgt direkt durch Editieren der Datei. Die Passwörter werden dabei im Klartext
+eingetragen. Beim nächsten Start des ooresults-server werden sie durch einen Hashwert
+(scrypt) ersetzt, z.B. "scrypt$16384$8$1$...". Ein solcher Eintrag wird unverändert übernommen.
 Z.B. enthält die folgende Datei die drei Benutzernamen Scholz, Habeck und Lindner:
 
 .. code-block::
@@ -192,6 +194,12 @@ Z.B. enthält die folgende Datei die drei Benutzernamen Scholz, Habeck und Lindn
 .. note::
 
    Änderungen an users.json werden erst nach einem Neustart des ooresults-server wirksam.
+
+Unter Linux und macOS ist die Datei users.json nur für den Besitzer lesbar.
+
+Fehlgeschlagene Anmeldungen werden mit Adresse und Benutzernamen in der Protokolldatei
+ooresults_server.log festgehalten. Nach 5 fehlgeschlagenen Anmeldungen innerhalb von 60 Sekunden
+werden weitere Anmeldungen von derselben Adresse für 60 Sekunden abgewiesen.
 
 .. warning::
 

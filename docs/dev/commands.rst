@@ -98,6 +98,12 @@ The software should be tested for the following Python versions:
    <venv>/bin/python -m pytest tests
    <venv>/bin/python -m pytest webtests
 
+The webtests start an ooresults-server with a temporary directory and log in with the
+user name admin and the password admin; the test fixture creates the file users.json with
+this user. Requests that change data must contain the header
+"X-Requested-With: XMLHttpRequest", otherwise the server rejects them (CSRF protection).
+The webtests need Firefox; if it is not installed, Selenium downloads it automatically.
+
 
 
 Testing with docker

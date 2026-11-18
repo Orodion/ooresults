@@ -86,8 +86,13 @@ Verknüpfung zu diesem Programm angelegt werden.
 
 .. warning::
 
-   Aus Sicherheitsgründen wird empfohlen, das Passwort des Admin Benutzers nach dem ersten Start
-   des ooresults-server zu ändern, siehe Kapitel :ref:`user_management`.
+   Beim ersten Start wird der Benutzer admin mit einem zufällig erzeugten Passwort angelegt.
+   Das Passwort wird nur einmal in der Konsole angezeigt und sollte notiert werden,
+   siehe Kapitel :ref:`user_management`.
+
+Kann die Datenbank nicht geöffnet oder aktualisiert werden (z.B. weil sie von einer neueren
+Version von ooresults stammt), wird eine Fehlermeldung ausgegeben und der ooresults-server
+wird nicht gestartet.
 
 Alle Daten werden in der sqlite Datenbank-Datei ooresults.sqlite im Unterverzeichnis .ooresults
 des Heimverzeichnisses des Benutzer gespeichert.

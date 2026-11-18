@@ -155,6 +155,8 @@ Status
    - **MP (mispunched)**:
 
      The runner has not punched at least one control correctly.
+     This status is also set if the finish time is not after the start time
+     (e.g. because of a wrong start time in the start list). The result then has no running time.
 
    - **DNS (did not start)**:
 
@@ -366,6 +368,8 @@ Controls
    Numbers of the controls (without start and finish) that make up the course.
 
    For the competition type "Standard" the controls have to be visited in the order specified here.
+   A control punched at a wrong position counts as one missing control,
+   the other controls punched in the correct order remain valid.
    For the competition types "Net" and "Score" the controls can be specified in any order.
 
    The controls are entered separated by hyphens.
