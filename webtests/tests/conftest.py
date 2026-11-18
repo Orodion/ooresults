@@ -110,5 +110,6 @@ def post(url: str, data: dict[str, str]) -> None:
         auth=("admin", "admin"),
         verify=False,
         data=data,
+        headers={"X-Requested-With": "XMLHttpRequest"},
     )
     assert r.status_code == 200

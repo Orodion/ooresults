@@ -24,6 +24,7 @@ import pathlib
 import re
 import sqlite3
 import sys
+import urllib.parse
 import warnings
 from typing import Optional
 
@@ -66,8 +67,41 @@ def server_static(filepath) -> bottle.HTTPResponse:
     return bottle.static_file(filepath, root=pathlib.Path(__file__).parent / "static")
 
 
+# Header sent by the JavaScript code of the web pages with each request
+# changing data. Browsers do not send custom headers with cross-site requests
+# (without a CORS preflight, which is not supported by the server), so the
+# header protects against cross-site request forgery (CSRF).
+CSRF_HEADER = "X-Requested-With"
+CSRF_HEADER_VALUE = "XMLHttpRequest"
+SAFE_METHODS = ("GET", "HEAD", "OPTIONS")
+
+
+def request_allowed(
+    method: str,
+    requested_with: Optional[str],
+    origin: Optional[str],
+    host: Optional[str],
+) -> bool:
+    """Check whether a request is not a cross-site request forgery.
+
+    Requests with an unsafe method must contain the CSRF header and, if the
+    browser sends an Origin header, the origin must be the requested host.
+    """
+    if method.upper() in SAFE_METHODS:
+        return True
+    if requested_with != CSRF_HEADER_VALUE:
+        return False
+    if origin is not None:
+        if host is None or urllib.parse.urlsplit(origin).netloc != host:
+            return False
+    return True
+
+
 @bottle.hook("after_request")
 def after_request() -> None:
+    # do not allow the pages to be embedded in pages of other sites
+    bottle.response.set_header("X-Frame-Options", "DENY")
+    bottle.response.set_header("Content-Security-Policy", "frame-ancestors 'none'")
     logging.info(
         f"{bottle.request.method}  {bottle.request.remote_addr}  {bottle.request.path}  {bottle.response.status_line}"
     )
@@ -92,6 +126,17 @@ def my_plugin(callback):
                 return bottle.HTTPResponse(
                     status=401, headers=headers, body=render.unauthorized()
                 )
+
+        if not request_allowed(
+            method=bottle.request.method,
+            requested_with=bottle.request.get_header(CSRF_HEADER),
+            origin=bottle.request.get_header("Origin"),
+            host=bottle.request.get_header("Host"),
+        ):
+            logging.warning(
+                f"Request rejected (possible CSRF): {bottle.request.method} {path}"
+            )
+            return bottle.HTTPResponse(status=403, body="Forbidden")
 
         try:
             return callback(*args, **kwargs)
